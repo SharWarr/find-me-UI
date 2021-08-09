@@ -1,0 +1,144 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Find me </a>
+    </div>
+
+    <form class="d-flex navbar-header" >
+      <input id="search_id" class="form-control me-2 " type="text" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success" (click)="Search()" type="button">Search</button>
+    </form>
+  </div>
+</nav>
+<br>
+<br>
+
+<div class="form-popup container example white" id="myForm">
+  <form [formGroup]="roomForm" id="myForm" class="form-container" ngNativeValidate>
+    <div style="padding-left:35%; height:20px" >
+      <a href="close_form"  (click)="closeForm()" >
+    <img style="height:40px ;width:40px;"src="https://img.icons8.com/emoji/48/000000/cross-mark-button-emoji.png"/>
+      </a>
+    </div>
+    <div class="col-sm-4 form-group" style="padding-bottom: 10px;">
+      <label class="form-label"><font color="white">Name of room </font><font color="red">*</font></label>
+      <div *ngIf="flag_show">
+        <input formControlName="Room_name"  [(ngModel)]="Room_n" type="text" class="form-control input-sm" required>
+        
+      </div>
+      <div *ngIf="flag">
+        <input formControlName="Room_name" type="text" class="form-control input-sm" readonly>
+      </div>
+    </div>
+    <div class="col-sm-4 form-group" style="padding-bottom: 10px;">
+      <label class="form-label"><font color="white">Description</font></label> <br>
+      <div *ngIf="flag_show">
+        <input type="text" formControlName="Description" class="form-control input-lg">
+      </div>
+      <div *ngIf="flag">
+        <input type="text" formControlName="Description" class="form-control input-lg" readonly>
+      </div>
+    </div>
+
+    <div class="col-sm-4 form-group" style="padding-bottom: 10px;">
+      <label class="form-label"><font color="white">Storage</font> <font color="red">  *</font></label> <br>
+      <input type="text" id="storage_id" formControlName="storage_name" class="form-control input-sm"
+        placeholder="Cupboard1" [(ngModel)]="storage_n" required >
+    </div>
+
+    <div class="col-sm-4 form-group" style="padding-bottom: 10px;">
+      <label class="form-label"><font color="white">Item name</font></label> <br>
+
+      <div formArrayName="item_name" *ngFor="let item of item_name.controls; let i=index">
+        <input id="item_id" type="text" class="form-control" [formControlName]="i"  />
+      </div>
+      <button type="button" class="btn btn-success bt-sm" (click)="additem()"> Add item </button>
+      <button type="button" class="btn btn-danger bt-sm" (click)="deleteitem()"> Delete item </button>
+      <br>
+      <br>
+      <button type="submit" class="btn btn-success bt-sm "  [disabled]="!Room_n || !storage_n  "  (click)="addStorage()">
+        Add New Storage </button>
+    </div>
+
+    <br>
+
+   
+
+    <button type="submit" class="btn btn-primary" [disabled]="!Room_n || !storage_n  " (click)="Submit()">Submit</button>
+   
+
+
+    <!-- <button type="button" class="btn btn-primary" (click)="getAllRooms()"> GET </button> -->
+    <!-- </div> -->
+
+  </form>
+
+</div>
+
+
+
+<div style="padding-left:40px">
+  <div class="card example" style="width:300px; height:300px; margin:5px ; display:inline-block;position:static;"
+    *ngFor="let obj of result_obj">
+    <img class="card-img-top" src="\assets\mustard-color.jpg" height="150" alt="Card image">
+    <div class="card-body" id="{{obj._id}}">
+      <h4 class="card-title">{{obj.Room_name }}</h4>
+      <p class="card-text">{{obj.Description}}</p>
+      <div class="accordion" id="accordianExample">
+        <div class="accordion-item" *ngFor="let storages of obj.Storage_name_list; index as i">
+          <h6 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+              [attr.data-bs-target]="'#i'+obj.Storage_id[i]" aria-expanded="false">
+              {{storages}}
+            </button>
+          </h6>
+          <div id="i{{obj.Storage_id[i]}}" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+            data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <li *ngFor="let item of obj.Item_name_list[i]">
+                {{item}}
+              </li>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="padding-top: 8px; padding-left:80px;">
+          <a href="delete" (click)="delete_Room(obj._id)">
+            <img src="https://img.icons8.com/material-sharp/24/000000/delete.png" />
+          </a>
+          <img style=" padding-left:30px;height:20px;" src="\assets\pen.png" />
+         </div>
+     
+      </div>
+      
+    </div>
+    
+  </div>
+  <a href="#" (click)="openForm()"> <img class="content" src="\assets\button.png" /> </a>
+</div>
+
+<div id="results_table" class="Tableh container example">
+<table class="table table-light table-hover">
+  <thead >
+    <tr>
+      
+      <th scope="col" style="background-color: rgb(90, 12, 12);"><font color="white">Room Name</font></th>
+      <th scope="col" style="background-color: rgb(90, 12, 12);"><font color="white">Storage and items</font></th>
+      
+     
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let room of search_result | keyvalue; index as i">
+     
+      <td>{{room.key}}</td>
+      <td>
+          <tr *ngFor="let val of news[i] " >
+            {{val}}
+          </tr>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
